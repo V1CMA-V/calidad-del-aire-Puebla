@@ -131,3 +131,6 @@ fabric.properties
 ### Proyect template
 # Data directory
 .Datos/corregidos/
+
+# No guardar Datos
+Datos/
