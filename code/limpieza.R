@@ -13,7 +13,6 @@ limpiar_datos <- function(file) {
 
   # Condicional para diferenciar los años
   if (anio %in% 2020:2022) {
-
     # Renombrar columnas
     data_clean <- data %>%
       rename(
@@ -24,7 +23,7 @@ limpiar_datos <- function(file) {
         NO2 = "NO2.horario..ppm.",
         CO_8Hrs = "CO.8.hrs..ppm.",
         SO2_24Hrs = "SO2.24.hrs..ppm.",
-        PM_10_12Hrs = names(data)[8],  # Usa el índice de la columna
+        PM_10_12Hrs = names(data)[8], # Usa el índice de la columna
         PM_2.5_12Hrs = names(data)[9]
       )
 
@@ -34,21 +33,21 @@ limpiar_datos <- function(file) {
     # Transformar columnas de caracter a numerico y colocar NA en los valores no numericos
     data_clean <- data_clean %>%
       mutate(across(
-        .cols = !all_of(cols_excluir),  # Aplica a todas las columnas menos "Fecha" y "Horas"
-        .fns = ~as.integer(as.numeric(na_if(., "F.O.")) * 1000)
+        .cols = !all_of(cols_excluir), # Aplica a todas las columnas menos "Fecha" y "Horas"
+        .fns = ~ as.integer(as.numeric(na_if(., "F.O.")) * 1000)
       ))
 
     # Limpiar la columna CO_8Hrs
     data_clean <- data_clean %>%
-      mutate(CO_8Hrs = na_if(CO_8Hrs, "F.O.")) %>%  # Reemplazar "F.O." por NA correctamente
-      mutate(CO_8Hrs = as.numeric(CO_8Hrs)) %>%     # Convertir a numérico
+      mutate(CO_8Hrs = na_if(CO_8Hrs, "F.O.")) %>% # Reemplazar "F.O." por NA correctamente
+      mutate(CO_8Hrs = as.numeric(CO_8Hrs)) %>% # Convertir a numérico
       mutate(CO_8Hrs = as.integer(CO_8Hrs * 100))
 
     # Limpiar las columnas PM_10_12Hrs y PM_2.5_12Hrs
     data_clean <- data_clean %>%
       mutate(across(
-        .cols = c("PM_10_12Hrs", "PM_2.5_12Hrs"),  # Aplica a las columnas "CO_8Hrs" y "PM_2_5_12Hrs"
-        .fns = ~as.integer(as.numeric(na_if(., "F.O.")))
+        .cols = c("PM_10_12Hrs", "PM_2.5_12Hrs"), # Aplica a las columnas "CO_8Hrs" y "PM_2_5_12Hrs"
+        .fns = ~ as.integer(as.numeric(na_if(., "F.O.")))
       ))
 
     # Cambiar tipo de dato a la columna fecha de carácter a fecha
@@ -57,11 +56,10 @@ limpiar_datos <- function(file) {
       transform(Fecha = ymd(Fecha)) %>%
       transform(Horas = hms(paste0(Horas, ":00")))
   } else if (anio %in% 2023:2024) {
-
     # Renombrar columnas
     data_clean <- data %>%
       rename(
-        PM_10 = "PM.10",  # Usa el índice de la columna
+        PM_10 = "PM.10", # Usa el índice de la columna
         PM_2.5 = "PM.2.5"
       )
 
@@ -71,8 +69,8 @@ limpiar_datos <- function(file) {
     # Transformar columnas de caracter a numerico y colocar NA en los valores no numericos
     data_clean <- data_clean %>%
       mutate(across(
-        .cols = !all_of(cols_excluir),  # Aplica a todas las columnas menos "Fecha" y "Horas"
-        .fns = ~as.integer(as.numeric(na_if(., "F.O.")))
+        .cols = !all_of(cols_excluir), # Aplica a todas las columnas menos "Fecha" y "Horas"
+        .fns = ~ as.integer(as.numeric(na_if(., "F.O.")))
       ))
 
     # Cambiar tipo de dato a la columna fecha de carácter a fecha
